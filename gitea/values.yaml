@@ -20,3 +20,11 @@ gitea:
       ADAPTER: memory
     queue:
       TYPE: level
+      
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: standard   # adjust to your k8s storage class
+  admin:
+    username: admin
+    password: admin123
