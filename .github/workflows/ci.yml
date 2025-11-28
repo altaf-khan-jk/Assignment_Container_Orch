@@ -14,7 +14,7 @@ jobs:
           GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
           GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
           GITEA_HOST: group2.the-vpk.com
-          REPO: CI-CD-on-K8s-Group2
+          REPO: Assignment_Container_Orch
           BRANCH: ${{ github.ref_name }}
         run: |
           set -e
