@@ -1,0 +1,39 @@
+name: Mirror to Gitea
+on: [push]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed for force-with-lease safety
+
+      - name: Push to Gitea (force-with-lease)
+        env:
+          GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          GITEA_HOST: group2.the-vpk.com
+          REPO: CI-CD-on-K8s-Group2
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -e
+          git config user.name  "GitHub Mirror Bot"
+          git config user.email "actions@github.com"
+
+          GITEA_URL="https://${GITEA_USERNAME}:${GITEA_TOKEN}@${GITEA_HOST}/${GITEA_USERNAME}/${REPO}.git"
+
+          # Ensure idempotent remote
+          git remote remove gitea 2>/dev/null || true
+          git remote add gitea "$GITEA_URL"
+
+          # Fetch the branch from Gitea so --force-with-lease has a lease to compare
+          git fetch gitea "${BRANCH}" --depth=1 || true
+
+          # Try a normal push first
+          if git push gitea HEAD:"${BRANCH}"; then
+            echo "Pushed normally."
+          else
+            echo "Non-fast-forward, forcing with lease..."
+            git push --force-with-lease gitea HEAD:"${BRANCH}"
+          fi
