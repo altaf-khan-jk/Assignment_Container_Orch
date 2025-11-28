@@ -13,7 +13,7 @@ jobs:
         env:
           GITEA_USERNAME: ${{ secrets.GITEA_USERNAME }}
           GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
-          GITEA_HOST: group2.the-vpk.com
+          GITEA_HOST: probable-pancake-4j6xxg74vvq9h6jp-3000.app.github.dev/
           REPO: Assignment_Container_Orch
           BRANCH: ${{ github.ref_name }}
         run: |
